@@ -18,6 +18,7 @@ export default defineConfig({
     //     ],
     //   }),
   ],
+  base: "/gravitation-ether/",
   build: {
     rollupOptions: {
       plugins: [

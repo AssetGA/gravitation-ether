@@ -25,7 +25,6 @@ dist-ssr
 *.sw?
 
 node_modules
-.github
 .env
 coverage
 coverage.json
