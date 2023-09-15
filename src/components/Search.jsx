@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { search } from "../assets";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
 const Search = ({ findCampaign }) => {
   const [text, onChangeText] = useState("");
@@ -21,16 +21,13 @@ const Search = ({ findCampaign }) => {
           value={text}
           onChange={(e) => onChangeText(e.target.value.trim())}
         />
-        {/* <button className="w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer">
-          <img
-            src={search}
-            alt="search"
-            className="w-[15px] h-[15px] object-contain"
-          />
-        </button> */}
       </div>
     </form>
   );
+};
+
+Search.propTypes = {
+  findCampaign: PropTypes.func,
 };
 
 export default Search;

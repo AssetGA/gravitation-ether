@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 
 import { tagType, thirdweb } from "../assets";
 import { daysLeft } from "../utils";
@@ -81,6 +81,18 @@ const FundCard = ({
       </div>
     </div>
   );
+};
+
+FundCard.propTypes = {
+  owner: PropTypes.string,
+  title: PropTypes.string,
+  description: PropTypes.string,
+  target: PropTypes.string,
+  deadline: PropTypes.string,
+  amountCollected: PropTypes.string,
+  image: PropTypes.string,
+  handleClick: PropTypes.func,
+  invited: PropTypes.string,
 };
 
 export default FundCard;

@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const CustomButton = ({ btnType, title, handleClick, styles, yes }) => {
   return (
     <button
@@ -9,6 +11,14 @@ const CustomButton = ({ btnType, title, handleClick, styles, yes }) => {
       {title}
     </button>
   );
+};
+
+CustomButton.propTypes = {
+  btnType: PropTypes.string,
+  title: PropTypes.string,
+  handleClick: PropTypes.func,
+  styles: PropTypes.string,
+  yes: PropTypes.bool,
 };
 
 export default CustomButton;

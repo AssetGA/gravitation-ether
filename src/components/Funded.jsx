@@ -1,5 +1,3 @@
-import React from "react";
-
 const Funded = () => {
   return (
     <div className="flex justify-center  md:items-center  w-full h-screen text-xl">

@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 
 const CountBox = ({ title, value }) => {
   return (
@@ -11,6 +11,11 @@ const CountBox = ({ title, value }) => {
       </p>
     </div>
   );
+};
+
+CountBox.propTypes = {
+  title: PropTypes.string,
+  value: PropTypes.number,
 };
 
 export default CountBox;

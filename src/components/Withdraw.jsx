@@ -1,5 +1,3 @@
-import React from "react";
-
 const Withdraw = () => {
   return (
     <div className="flex justify-center items-center w-full h-screen text-xl">
