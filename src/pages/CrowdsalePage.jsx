@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import { CustomButton, FormField, Loader } from "../components";
 import { useStateContext } from "../context/StateContext";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const CrowdsalePage = () => {
-  const { crowdsaleTokenBalance, accountBalance, buyToken } = useStateContext();
+  const { crowdsaleBalance: crowdsaleTokenBalance, accountBalance } =
+    useSelector((states) => states.globalStates);
+  const { buyToken } = useStateContext();
   const [isLoading, setIsLoading] = useState(false);
   const notify = () => toast("ETH balance not enough");
   const [form, setForm] = useState({
@@ -17,7 +20,6 @@ const CrowdsalePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("hi");
     setIsLoading(true);
     await buyToken(form.quantity);
     setForm({
@@ -25,6 +27,7 @@ const CrowdsalePage = () => {
     });
     setIsLoading(false);
   };
+  console.log("accountBalance", accountBalance);
 
   useEffect(() => {
     accountBalance < form.quantity && notify();

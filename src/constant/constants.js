@@ -1,19 +1,37 @@
 "use client";
 
-import tokenMT from "./MyToken.json";
+import GravitationEther from "./GravitationEther.json";
 import crowdfunding from "./Crowdfunding.json";
 import crowdsale from "./Crowdsale.json";
 
-export const tokenMTAddress = "0x812F040547660147Df19A5735cD57a0591edf2b1";
+// test sepolia
 
-export const tokenMTABI = tokenMT.abi;
+export const tokenMTAddress = "0x4d62DE3ADc99876CEEce05A587075E630e45Bf0B";
 
-export const crowdfundingAddress = "0x000f5a5Fb962978F227d711968BB5C8C95913992";
+export const tokenMTABI = GravitationEther.abi;
 
-export const crowdfundingABI = crowdfunding.abi;
-
-export const crowdsaleAddress = "0x53dDC58b1dC6a1223bBEF47c0d5276b45E987149";
+export const crowdsaleAddress = "00x80eD1cC0DA55C733a0A5b11dA1Cf0AD244275F11";
 
 export const crowdsaleABI = crowdsale.abi;
 
-export const crowdfundingOwner = "0x535916208063c18457c098Cf3623c783B5ea6fD7";
+export const crowdfundingAddress = "0xF47A812d29D0E8Fca82C3F6352F20fA3FDa44Aac";
+
+export const crowdfundingABI = crowdfunding.abi;
+
+export const crowdfundingOwner = "0x2f990a32CebF0550aA3462F185D393eA39FDe7f3";
+
+// mainnet accounts
+
+// export const tokenMTAddress = "0xc10A9fa5c25780F700f0a97b804cC419b55A10C4";
+
+// export const tokenMTABI = GravitationEther.abi;
+
+// export const crowdsaleAddress = "0x71C609587D1a50651BaAB80203a00FD77e096D43";
+
+// export const crowdsaleABI = crowdsale.abi;
+
+// export const crowdfundingAddress = "0xe239F43c86adF8638f398e6637db39aBb4Ed6E72";
+
+// export const crowdfundingABI = crowdfunding.abi;
+
+// export const crowdfundingOwner = "0xE884cB03Ca443A94635fC96c88Cf5033Da5F550C";

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loader } from "../assets";
 import FundCard from "./FundCard";
@@ -7,7 +7,11 @@ import { paginate } from "../utils";
 import Search from "./Search";
 import PropTypes from "prop-types";
 
-const DisplayCampaigns = ({ title, isLoading, campaigns }) => {
+const DisplayCampaigns = React.memo(function DisplayCampaigns({
+  title,
+  isLoading,
+  campaigns,
+}) {
   const navigate = useNavigate();
 
   const [searchCampaigns, setSearchCampaigns] = useState([]);
@@ -87,7 +91,7 @@ const DisplayCampaigns = ({ title, isLoading, campaigns }) => {
       />
     </div>
   );
-};
+});
 
 DisplayCampaigns.propTypes = {
   title: PropTypes.string,

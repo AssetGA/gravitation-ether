@@ -16,6 +16,7 @@ import {
   DigoTwenty,
   GasSpaceFinancing,
   DigoProjectFinancing,
+  Modal,
 } from "./components";
 import {
   CampaignDetails,
@@ -31,8 +32,33 @@ import Withdraw from "./components/Withdraw";
 import Funded from "./components/Funded";
 import Reports from "./components/Reports";
 import { Layout } from "./layout";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useStateContext } from "./context/StateContext";
 
 const App = () => {
+  const [showModal, setShowModal] = useState(false);
+  const { connectWallet } = useStateContext();
+
+  const { connect } = useSelector((states) => states.globalStates);
+
+  const onShowModal = () => {
+    if (showModal === false) {
+      setShowModal(true);
+    } else {
+      setShowModal(false);
+    }
+  };
+
+  console.log("connect", connect);
+
+  useEffect(() => {
+    connectWallet();
+    if (connect === true) {
+      onShowModal();
+    }
+  }, [connect]);
+
   return (
     <div className="relative sm:-8 p-4 bg-[#13131a] min-h-screen flex flex-row text-white pt-[30px]">
       <div className="sm:flex hidden mr-10 relative">
@@ -73,6 +99,12 @@ const App = () => {
           </Route>
         </Routes>
       </div>
+      <Modal
+        showModal={showModal}
+        onShowModal={onShowModal}
+        error="Please install Metamask"
+      />
+
       <ToastContainer />
     </div>
   );

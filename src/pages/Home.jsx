@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import DisplayCampaigns from "../components/DisplayCampaigns";
 import { useStateContext } from "../context/StateContext";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
 
-  const { address, crowdfundingContract, getCampaigns } = useStateContext();
+  const { wallet: address } = useSelector((states) => states.globalStates);
+
+  const { crowdfundingContract, getCampaigns } = useStateContext();
 
   const newDate = new Date();
 
@@ -20,7 +23,9 @@ const Home = () => {
   const fetchCampaigns = async () => {
     setIsLoading(true);
     const data = await getCampaigns();
-    setCampaigns(filteredCampaigns(data));
+    if (data !== undefined) {
+      setCampaigns(filteredCampaigns(data));
+    }
     setIsLoading(false);
   };
 

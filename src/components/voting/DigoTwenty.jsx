@@ -1,9 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useStateContext } from "../../context/StateContext";
+import { useSelector } from "react-redux";
 import SignInError from "../SignInError";
 
 const DigoTwenty = () => {
-  const { tokenBalance } = useStateContext();
+  const { tokenBalance } = useSelector((states) => states.globalStates);
   return (
     <>
       {tokenBalance >= 1000 ? (
