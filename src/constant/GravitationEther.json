@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "MyToken",
-  "sourceName": "contracts/MyToken.sol",
+  "contractName": "GravitationEther",
+  "sourceName": "contracts/GravitationEther.sol",
   "abi": [
     {
       "inputs": [],

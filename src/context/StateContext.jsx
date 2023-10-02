@@ -9,6 +9,8 @@ import {
 } from "../constant/constants";
 import { ethers, Contract, formatEther, parseEther } from "ethers";
 import PropTypes from "prop-types";
+import { globalActions } from "../store/globalSlices";
+import { useDispatch, useSelector } from "react-redux";
 
 const fetchContract = (address, abi, signerOrProvider) =>
   new Contract(address, abi, signerOrProvider);
@@ -17,57 +19,61 @@ const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
   // account it is address user
-  const [account, setAccount] = useState();
-  const [tokenContract, setTokenContract] = useState();
-  const [accountBalance, setAccountBalance] = useState();
-  const [tokenBalance, setTokenBalance] = useState();
-  const [crowdsaleTokenBalance, setCrowdsaleTokenBalance] = useState();
-  const [error, setError] = useState(null);
+  // const [account, setAccount] = useState();
+
+  const dispatch = useDispatch();
   const [crowdsaleContract, setCrowdsaleContract] = useState();
 
   // crowdfunding state
   const [crowdfundingContract, setCrowdfundingContract] = useState();
-  const [projectNames, setProjectNames] = useState([]);
-  const [permission, setPermission] = useState();
+
+  const {
+    setConnect,
+    setWallet,
+    setAccountBalance,
+    setCrowdsaleBalance,
+    setTokenBalance,
+    setProjectNames,
+    setPermission,
+    setError,
+  } = globalActions;
+  const { wallet } = useSelector((states) => states.globalStates);
 
   function handleAccountsChanged() {
     checkConnection();
   }
 
+  const connectWallet = async () => {
+    try {
+      if (!window.ethereum) dispatch(setConnect(true));
+      const accounts = await window.ethereum.request?.({
+        method: "eth_requestAccounts",
+      });
+      dispatch(setWallet(accounts?.[0]));
+      // setAccount(accounts?.[0]);
+    } catch (error) {
+      errorCatcher(error);
+    }
+  };
+
   const checkConnection = async () => {
     try {
-      if (!window.ethereum) return console.log("Install Metamask");
-      window.ethereum.isConnected();
-      const accounts = await window.ethereum.request({
-        method: "eth_accounts",
-      });
-      setAccount(accounts[0]);
-
       // CREATE CONNECTION TO
-      const provider = new ethers.BrowserProvider(window.ethereum);
+
+      const provider = wallet && new ethers.BrowserProvider(window.ethereum);
 
       const _signer = await provider.getSigner();
 
       // eth balance of signer
-      const balance = await provider.getBalance(accounts[0]);
-      setAccountBalance(formatEther(balance));
+      const balance = await provider.getBalance(_signer.address);
+      dispatch(setAccountBalance(formatEther(balance)));
 
       // token contract
       const contractToken = fetchContract(tokenMTAddress, tokenMTABI, _signer);
-      setTokenContract(contractToken);
 
       // GET ALL TOKEN HOLDER
       const allTokensHolder = await contractToken.balanceOf(_signer.address);
-      setTokenBalance(formatEther(allTokensHolder));
-      // contractToken.on("Transfer", (from, to, _amount, event) => {
-      //   const amount = formatEther(_amount, 18);
-      //   console.log(`${from} => ${to}: ${amount}`);
-
-      //   // The `event.log` has the entire EventLog
-
-      //   // Optionally, stop listening
-      //   event.removeListener();
-      // });
+      dispatch(setTokenBalance(formatEther(allTokensHolder)));
 
       // crowdsale contract
       const contractCrowdsale = fetchContract(
@@ -88,7 +94,8 @@ export const StateContextProvider = ({ children }) => {
 
       // crowdsale token volume
       const datasale = await contractToken.balanceOf(contractCrowdsale.target);
-      setCrowdsaleTokenBalance(formatEther(datasale));
+
+      dispatch(setCrowdsaleBalance(formatEther(datasale)));
     } catch (error) {
       console.log("APP is not connected", error);
       errorCatcher(error);
@@ -99,8 +106,7 @@ export const StateContextProvider = ({ children }) => {
   const buyToken = async (amount) => {
     const wei = parseEther(amount);
     try {
-      console.log(amount, wei);
-      const data = await crowdsaleContract.buyTokens(account, { value: wei });
+      const data = await crowdsaleContract.buyTokens(wallet, { value: wei });
       await data.wait();
       checkConnection();
     } catch (error) {
@@ -120,7 +126,6 @@ export const StateContextProvider = ({ children }) => {
         form.image,
         form.invited.trim()
       );
-      console.log("contract call success", data);
       await data.wait();
       return data;
     } catch (error) {
@@ -155,7 +160,7 @@ export const StateContextProvider = ({ children }) => {
     try {
       const allCampaigns = await getCampaigns();
       const filteredCampaigns = allCampaigns.filter(
-        (campaign) => campaign.owner.toLowerCase() === account.toLowerCase()
+        (campaign) => campaign.owner.toLowerCase() === wallet.toLowerCase()
       );
       return filteredCampaigns;
     } catch (error) {
@@ -170,7 +175,7 @@ export const StateContextProvider = ({ children }) => {
       const names = parsedCampaigns.map((elem) => {
         return elem.title;
       });
-      setProjectNames(names);
+      dispatch(setProjectNames(names));
     }
   };
 
@@ -182,7 +187,6 @@ export const StateContextProvider = ({ children }) => {
       return donate;
     } catch (error) {
       errorCatcher(error);
-      return "error";
     }
   };
 
@@ -211,14 +215,13 @@ export const StateContextProvider = ({ children }) => {
       await date.wait();
     } catch (error) {
       errorCatcher(error);
-      return "error";
     }
   };
 
   const getVotingPermission = async (_id) => {
     try {
       const data = await crowdfundingContract.getVoting(_id);
-      setPermission(data);
+      dispatch(setPermission(data));
     } catch (error) {
       errorCatcher(error);
     }
@@ -226,43 +229,33 @@ export const StateContextProvider = ({ children }) => {
 
   const setAddressCrowdfund = async (_address) => {
     try {
-      const data = await crowdfundingContract.setCrowdfundingAddress(_address);
-      console.log("data", data);
+      await crowdfundingContract.setCrowdfundingAddress(_address);
     } catch (error) {
       errorCatcher(error);
     }
   };
 
   function errorCatcher(error) {
-    setError(error.reason);
+    dispatch(setError(error.reason));
   }
 
   return (
     <StateContext.Provider
       value={{
-        address: account,
+        connectWallet,
         handleAccountsChanged,
         checkConnection,
-        tokenContract: tokenContract,
-        tokenBalance: tokenBalance,
-        // setTokenInfo,
-        // checkCrowdsaleBalance,
-        crowdsaleTokenBalance,
         crowdsaleContract,
         crowdfundingContract,
-        error,
-        accountBalance: accountBalance,
         buyToken,
         getCampaigns,
         getNameOfProject,
-        projectNames,
         createCampaign: publishCampaign,
         getUserCampaigns,
         donate,
         getDonations,
         setVotingPermission,
         getVotingPermission,
-        permission,
         setAddressCrowdfund,
       }}
     >

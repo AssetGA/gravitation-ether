@@ -15,7 +15,7 @@ const CountBox = ({ title, value }) => {
 
 CountBox.propTypes = {
   title: PropTypes.string,
-  value: PropTypes.number,
+  value: PropTypes.string,
 };
 
 export default CountBox;

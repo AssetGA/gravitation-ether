@@ -9,20 +9,24 @@ import { useStateContext } from "../context/StateContext";
 import { parseUnits } from "ethers";
 import Modal from "../components/Modal";
 import { SignInError } from "../components";
+import { useSelector } from "react-redux";
 
 const CampaignDetails = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const {
+    wallet: address,
     tokenBalance,
+    permission,
+  } = useSelector((states) => states.globalStates);
+
+  const {
     donate,
     getDonations,
     contractCrowdfunding,
-    address,
     setVotingPermission,
     error,
     getVotingPermission,
-    permission,
   } = useStateContext();
   const [isLoading, setIsLoading] = useState(false);
   const [amount] = useState("100");
@@ -39,8 +43,6 @@ const CampaignDetails = () => {
       setDonators(data);
     }
   };
-
-  console.log("donators", donators);
 
   useEffect(() => {
     fetchDonators();
@@ -62,8 +64,6 @@ const CampaignDetails = () => {
     }
   };
 
-  console.log("ckecknum", parseUnits(state.target, 18));
-
   const handleSend = async () => {
     setIsLoading(true);
     const date = await setVotingPermission(
@@ -78,8 +78,6 @@ const CampaignDetails = () => {
       navigate("/profile");
     }
   };
-
-  console.log("er", error);
 
   const checkDonators = () => {
     const findDonator = donators.find((elem) => {

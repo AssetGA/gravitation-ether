@@ -1,8 +1,8 @@
-import { useStateContext } from "../../context/StateContext";
+import { useSelector } from "react-redux";
 import SignInError from "../SignInError";
 
 const Bitcoin = () => {
-  const { tokenBalance } = useStateContext();
+  const { tokenBalance } = useSelector((states) => states.globalStates);
   return (
     <>
       {tokenBalance >= 1000 ? (

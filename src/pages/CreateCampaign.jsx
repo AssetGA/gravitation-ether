@@ -4,17 +4,16 @@ import { money } from "../assets";
 import { parseUnits } from "ethers";
 import { checkIfImage, validator } from "../utils";
 import { useStateContext } from "../context/StateContext";
+import { useSelector } from "react-redux";
 
 const CreateCampaign = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [campaignCreated, setCampaignCreated] = useState(false);
-  const {
-    tokenBalance,
-    createCampaign,
-    crowdfundingError,
-    getNameOfProject,
-    projectNames,
-  } = useStateContext();
+  const { tokenBalance, projectNames } = useSelector(
+    (states) => states.globalStates
+  );
+  const { createCampaign, crowdfundingError, getNameOfProject } =
+    useStateContext();
   const [form, setForm] = useState({
     name: "",
     title: "",

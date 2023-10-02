@@ -64,12 +64,9 @@ export function validator(data, config) {
                   i = i + 1;
                 }
 
-                console.log("a", a, "c", c);
-
                 return b.length === c.length ? elem : undefined;
               })
             : undefined;
-        console.log("confi", name);
         statusValidate = name !== undefined;
         break;
       }

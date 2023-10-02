@@ -4,19 +4,29 @@ import { logo, menu } from "../assets";
 import CustomButton from "./CustomButton";
 import { navlinks } from "../constant";
 import { useStateContext } from "../context/StateContext";
+import { useSelector } from "react-redux";
+
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { connect, wallet: address } = useSelector(
+    (states) => states.globalStates
+  );
   const [isActive, setIsActive] = useState("dashboard");
   const [toggleDrawer, setToggleDrawer] = useState(false);
+  const notify = () => toast("Please install Metamask");
 
-  const { address, checkConnection, handleAccountsChanged } = useStateContext();
-
-  window.ethereum.on("accountsChanged", handleAccountsChanged);
+  const { checkConnection, connectWallet } = useStateContext();
 
   useEffect(() => {
-    checkConnection();
-  }, []);
+    connect === true && notify();
+    if (connect === false) {
+      checkConnection();
+    }
+  }, [connect, address]);
+
+  console.log("address", address);
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6 mr-0">
@@ -30,7 +40,7 @@ const Navbar = () => {
           styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
           handleClick={() => {
             if (address) navigate("create-campaign");
-            else checkConnection();
+            else connectWallet();
           }}
         />
         <a
@@ -63,7 +73,7 @@ const Navbar = () => {
             styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
             handleClick={() => {
               if (address) navigate("create-campaign");
-              else checkConnection();
+              else connectWallet();
             }}
             yes={true}
           />
